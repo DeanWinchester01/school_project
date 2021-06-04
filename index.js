@@ -21,12 +21,42 @@ bot.on("message",message=>{
 });
 
 bot.on("messageDelete",message=>{
-    logChannel.send(message.author.username+" sa "+message.content);
+    var attach = message.attachments.array();
+    var messageToSend = "";
+    
+    if (message.content.substring(1)){
+        messageToSend += message.author.username+" sa "+message.content;
+    }
+    
+    if(attach[0]){
+        if(message.content.substring(1)){
+            messageToSend += "\n"+attach[0].attachment;
+        }else{
+            messageToSend = message.author.username+" skickade\n"+attach[0].attachment;
+        }
+    }
+
+    logChannel.send(messageToSend);
 });
 
 bot.on("messageDeleteBulk",(messages)=>{
     messages.forEach(message=>{
-        logChannel.send(message.author.username+" sa "+message.content);
+        var attach = message.attachments.array();
+        var messageToSend = "";
+        
+        if (message.content.substring(1)){
+            messageToSend += message.author.username+" sa "+message.content;
+        }
+        
+        if(attach[0]){
+            if(message.content.substring(1)){
+                messageToSend += "\n"+attach[0].attachment;
+            }else{
+                messageToSend = message.author.username+" skickade\n"+attach[0].attachment;
+            }
+        }
+
+        logChannel.send(messageToSend);
     });
 });
 
