@@ -8,19 +8,7 @@ bot.on("ready",()=>{
     logChannel = bot.channels.cache.get("755046816919322774");
 });
 
-bot.on("message",message=>{
-    var member = message.member;
-    if(member.id == "756829876178255913" || member.id == "400458098612895755"){
-        if(message.content.startsWith("delete ")){
-            var number = Number(message.content.split(" ")[1]);
-            if (number){
-                message.channel.bulkDelete(number+1);
-            }
-        }
-    }
-});
-
-bot.on("messageDelete",message=>{
+function CheckMessage(message){
     var attach = message.attachments.array();
     var messageToSend = "";
     
@@ -37,26 +25,33 @@ bot.on("messageDelete",message=>{
     }
 
     logChannel.send(messageToSend);
+}
+
+bot.on("message",message=>{
+    var member = message.member;
+    
+    if(member.id == "756829876178255913" || member.id == "400458098612895755"){
+        if(message.content.startsWith("delete ")){
+            var number = Number(message.content.split(" ")[1]);
+            if (number){
+                message.channel.bulkDelete(number+1);
+            }
+        }
+
+    }else{
+        if(message.attachments.array()[0] && message.channel.id == "747764025860948029"){
+            message.delete();
+        }
+    }
+});
+
+bot.on("messageDelete",message=>{
+    CheckMessage(message);
 });
 
 bot.on("messageDeleteBulk",(messages)=>{
     messages.forEach(message=>{
-        var attach = message.attachments.array();
-        var messageToSend = "";
-        
-        if (message.content.substring(1)){
-            messageToSend += message.author.username+" sa "+message.content;
-        }
-        
-        if(attach[0]){
-            if(message.content.substring(1)){
-                messageToSend += "\n"+attach[0].attachment;
-            }else{
-                messageToSend = message.author.username+" skickade\n"+attach[0].attachment;
-            }
-        }
-
-        logChannel.send(messageToSend);
+        CheckMessage(message);
     });
 });
 
